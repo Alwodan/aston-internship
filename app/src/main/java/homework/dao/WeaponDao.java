@@ -7,8 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeaponDao {
-    public static List<Weapon> getAllWeapons() {
+public class WeaponDao implements Dao<Weapon> {
+    public List<Weapon> getAll() {
         try (Connection con = DatabaseConnection.retrieveConnection();
              PreparedStatement pr = con.prepareStatement("SELECT * FROM weapon ORDER BY weapon_id ASC")) {
             List<Weapon> result = new ArrayList<>();
@@ -23,7 +23,7 @@ public class WeaponDao {
         }
     }
 
-    public static Weapon getWeaponById(Long id) {
+    public Weapon getById(Long id) {
         try (Connection con = DatabaseConnection.retrieveConnection();
         PreparedStatement pr = con.prepareStatement("SELECT * FROM weapon WHERE weapon_id = ?")) {
             pr.setLong(1, id);
@@ -38,7 +38,7 @@ public class WeaponDao {
         }
     }
 
-    public static Long saveWeapon(Weapon weapon) {
+    public Long save(Weapon weapon) {
         try (Connection con = DatabaseConnection.retrieveConnection();
         PreparedStatement pr = con.prepareStatement("INSERT INTO weapon (weapon_name, weapon_damage) VALUES (?, ?)",
                      Statement.RETURN_GENERATED_KEYS)) {
@@ -56,7 +56,7 @@ public class WeaponDao {
         }
     }
 
-    public static void updateWeapon(Weapon weapon) {
+    public void update(Weapon weapon) {
         if (weapon.getId() == null) {
             throw new RuntimeException();
         }
@@ -72,7 +72,7 @@ public class WeaponDao {
         }
     }
 
-    public static boolean deleteWeapon(Long id) {
+    public boolean delete(Long id) {
         if (id == null) {
             throw new IllegalArgumentException();
         }
