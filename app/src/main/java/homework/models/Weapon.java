@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Weapon {
+    private Long id;
     private String name;
-    private int damage;
+    private Integer damage;
 }

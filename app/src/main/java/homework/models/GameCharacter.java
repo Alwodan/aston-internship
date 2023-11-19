@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameCharacter {
-    private Long id;
     private String name;
-    private int powerLevel;
+    private Integer powerLevel;
 }
