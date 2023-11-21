@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "weaponServlet", value = "/factions")
+@WebServlet(name = "factionServlet", value = "/factions")
 public class FactionServlet extends HttpServlet {
     Dao<Faction> dao = new FactionDao();
 
