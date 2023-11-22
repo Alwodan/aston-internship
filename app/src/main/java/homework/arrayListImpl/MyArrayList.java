@@ -4,18 +4,18 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class MoreListThanArray<E> implements CustomList<E> {
+public class MyArrayList<E> implements CustomList<E> {
     private final static int INITIAL_CAPACITY = 10;
     private Object[] base;
     private int size;
     private int capacity;
 
-    public MoreListThanArray() {
+    public MyArrayList() {
         this.capacity = INITIAL_CAPACITY;
         base = new Object[INITIAL_CAPACITY];
     }
 
-    public MoreListThanArray(int capacity) {
+    public MyArrayList(int capacity) {
         if (capacity >= 0) {
             this.capacity = capacity;
             base = new Object[capacity];
