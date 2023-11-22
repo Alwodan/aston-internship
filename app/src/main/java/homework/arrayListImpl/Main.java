@@ -1,13 +1,18 @@
 package homework.arrayListImpl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-
+        MyArrayList<Dummy> dummies = new MyArrayList<>();
+        Random rand = new Random();
+        for (int i = 0; i < 15; i++) {
+            int val = rand.nextInt(100);
+            dummies.add(new Dummy(val));
+        }
+        System.out.println(dummies);
+        dummies.sort(Comparator.comparingInt(Dummy::getVal).reversed());
+        System.out.println(dummies);
     }
 
     static class Dummy {
@@ -27,9 +32,7 @@ public class Main {
 
         @Override
         public String toString() {
-            return "Dummy{" +
-                    "val=" + val +
-                    '}';
+            return "val=" + val;
         }
     }
 }

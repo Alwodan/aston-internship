@@ -1,34 +1,39 @@
 package homework.arrayListImpl;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Objects;
+import homework.arrayListImpl.sorters.MergeSorter;
+import homework.arrayListImpl.sorters.QuickSorter;
+import homework.arrayListImpl.sorters.Sorter;
+
+import java.time.LocalTime;
+import java.util.*;
 
 public class MyArrayList<E> implements CustomList<E> {
     private final static int INITIAL_CAPACITY = 10;
     private Object[] base;
     private int size;
-    private int capacity;
+    private Sorter<E> sorter;
 
     public MyArrayList() {
-        this.capacity = INITIAL_CAPACITY;
         base = new Object[INITIAL_CAPACITY];
     }
 
     public MyArrayList(int capacity) {
         if (capacity >= 0) {
-            this.capacity = capacity;
             base = new Object[capacity];
         } else {
             throw new IllegalArgumentException("I cannot break reality sorry");
         }
     }
 
+    public void add(Object element) {
+        add(size, element);
+    }
+
     @Override
     public void add(int index, Object element) {
         checkIndexForAddition(index);
-        if (size == capacity) {
-            //TODO: grow
+        if (this.size == this.base.length) {
+            this.base = grow(base.length);
         }
         System.arraycopy(base, index, base, index + 1, this.size - index);
         base[index] = element;
@@ -37,7 +42,13 @@ public class MyArrayList<E> implements CustomList<E> {
 
     @Override
     public void addAll(Collection<? extends E> c) {
-        //TODO: implement
+        Object[] arrayToAdd = c.toArray();
+        int totalSize = arrayToAdd.length + this.size;
+        if (totalSize > base.length) {
+            this.base = grow(totalSize);
+        }
+        System.arraycopy(arrayToAdd, 0, base, size, arrayToAdd.length);
+        this.size += arrayToAdd.length;
     }
 
     @Override
@@ -72,30 +83,16 @@ public class MyArrayList<E> implements CustomList<E> {
     @Override
     public boolean remove(Object o) {
         int i = 0;
-        if (o == null) {
-            while(true) {
-                if (i >= size) {
-                    return false;
-                }
-
-                if (base[i] == null) {
-                    break;
-                }
-
-                ++i;
+        while(true) {
+            if (i >= size) {
+                return false;
             }
-        } else {
-            while(true) {
-                if (i >= size) {
-                    return false;
-                }
 
-                if (o.equals(base[i])) {
-                    break;
-                }
-
-                ++i;
+            if (o.equals(base[i])) {
+                break;
             }
+
+            ++i;
         }
 
         this.remove(i);
@@ -103,13 +100,36 @@ public class MyArrayList<E> implements CustomList<E> {
     }
 
     @Override
-    public void sort(Comparator c) {
+    public void sort(Comparator<? super E> c) {
+        int rand = new Random().nextInt(1, 3);
+        Object[] toSort = new Object[this.size];
+        System.arraycopy(this.base, 0, toSort, 0, this.size);
+        if (rand == 1) {
+            System.out.println("MERGE SORTING TIME");
+            sorter = new MergeSorter<>();
+            sorter.sort((E[]) toSort, c);
+        } else if (rand == 2) {
+            System.out.println("QUICK SORTING TIME");
+            sorter = new QuickSorter<>();
+            sorter.sort((E[]) toSort, c);
+        }
+        System.arraycopy(toSort, 0, this.base, 0, this.size);
+    }
 
+    private Object[] grow(int minCapacity) {
+        return Arrays.copyOf(this.base, Math.max(minCapacity, this.base.length * 2));
     }
 
     private void checkIndexForAddition(int index) {
         if (index > this.size || index < 0) {
             throw new IllegalArgumentException("You cannot add to the void");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MyArrayList{" +
+                "base=" + Arrays.toString(base) +
+                '}';
     }
 }
