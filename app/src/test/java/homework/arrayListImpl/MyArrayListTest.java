@@ -87,4 +87,12 @@ public class MyArrayListTest {
         }
     }
 
+    @Test
+    void testInsertionInMiddle() {
+        list.add(2, 100);
+        assertThat(list.get(2)).isEqualTo(100);
+        assertThat(list.getSize()).isEqualTo(6);
+        assertThat(list.get(3)).isEqualTo(30);
+    }
+
 }

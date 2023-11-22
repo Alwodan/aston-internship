@@ -1,5 +1,6 @@
 package homework.arrayListImpl;
 
+import homework.arrayListImpl.sorters.QuickSorter;
 import homework.arrayListImpl.sorters.Sorter;
 
 import java.util.*;
@@ -8,7 +9,7 @@ public class MyArrayList<E> implements CustomList<E> {
     private final static int INITIAL_CAPACITY = 10;
     private Object[] base;
     private int size;
-    private Sorter<E> sorter;
+    private Sorter<E> sorter = new QuickSorter<>();
 
     public MyArrayList() {
         base = new Object[INITIAL_CAPACITY];
