@@ -1,10 +1,7 @@
 package homework.arrayListImpl;
 
-import homework.arrayListImpl.sorters.MergeSorter;
-import homework.arrayListImpl.sorters.QuickSorter;
 import homework.arrayListImpl.sorters.Sorter;
 
-import java.time.LocalTime;
 import java.util.*;
 
 public class MyArrayList<E> implements CustomList<E> {
