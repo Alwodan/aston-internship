@@ -54,6 +54,7 @@ public class MyArrayList<E> implements CustomList<E> {
     @Override
     public void clear() {
         this.base = new Object[INITIAL_CAPACITY];
+        this.size = 0;
     }
 
     @Override
@@ -101,18 +102,9 @@ public class MyArrayList<E> implements CustomList<E> {
 
     @Override
     public void sort(Comparator<? super E> c) {
-        int rand = new Random().nextInt(1, 3);
         Object[] toSort = new Object[this.size];
         System.arraycopy(this.base, 0, toSort, 0, this.size);
-        if (rand == 1) {
-            System.out.println("MERGE SORTING TIME");
-            sorter = new MergeSorter<>();
-            sorter.sort((E[]) toSort, c);
-        } else if (rand == 2) {
-            System.out.println("QUICK SORTING TIME");
-            sorter = new QuickSorter<>();
-            sorter.sort((E[]) toSort, c);
-        }
+        sorter.sort((E[]) toSort, c);
         System.arraycopy(toSort, 0, this.base, 0, this.size);
     }
 
@@ -131,5 +123,13 @@ public class MyArrayList<E> implements CustomList<E> {
         return "MyArrayList{" +
                 "base=" + Arrays.toString(base) +
                 '}';
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSorter(Sorter<E> sorter) {
+        this.sorter = sorter;
     }
 }
