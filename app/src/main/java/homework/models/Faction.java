@@ -1,9 +1,7 @@
 package homework.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,12 +9,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@Entity
+@Table(name = "faction")
 public class Faction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "faction_name")
     private String name;
-    private List<Long> memberIds;
-
-    public Faction(Long id, String name) {
-        this(id, name, null);
-    }
+    @ManyToMany(mappedBy = "factions")
+    @ToString.Exclude
+    private List<GameCharacter> characters;
 }

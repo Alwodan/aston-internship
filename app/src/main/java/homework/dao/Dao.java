@@ -7,9 +7,9 @@ public interface Dao<T> {
 
     T getById(Long id);
 
-    Long save(T obj);
+    T save(T obj);
 
     void update(T obj);
 
-    boolean delete(Long id);
+    void delete(Long id);
 }

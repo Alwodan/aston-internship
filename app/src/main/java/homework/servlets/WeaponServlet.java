@@ -18,29 +18,25 @@ public class WeaponServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String weaponId = req.getParameter("weapon_id");
-        String s;
-        if (weaponId == null) {
-            s = mapper.writeValueAsString(dao.getAll());
-        } else {
-            s = mapper.writeValueAsString(dao.getById(Long.parseLong(weaponId)));
-        }
         try (var writer = resp.getWriter()) {
-            writer.println(s);
+            String weaponId = req.getParameter("weapon_id");
+            if (weaponId != null) {
+                writer.println(new ObjectMapper().writeValueAsString(dao.getById(Long.valueOf(weaponId))));
+            } else {
+                writer.println(new ObjectMapper().writeValueAsString(dao.getAll()));
+            }
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long returnedId = dao.save(parseWeapon(req));
         try (var writer = resp.getWriter()) {
-            if (returnedId != null) {
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-                writer.println("Your weapon was saved with id " + returnedId);
+            if (req.getParameter("weapon_id") != null) {
+                writer.println("You actually don't need to specify id here. For updating use PUT method.");
+                writer.println("Aborting operation...");
             } else {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                writer.println("Something went horribly wrong and your weapon vanished");
+                dao.save(parseWeapon(req));
+                writer.println("Your weapon must have been saved");
             }
         }
     }
@@ -48,13 +44,12 @@ public class WeaponServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (var writer = resp.getWriter()) {
-            try {
+            if (req.getParameter("weapon_id") == null) {
+                writer.println("You actually do need to specify id here. For creating use POST method.");
+                writer.println("Aborting operation...");
+            } else {
                 dao.update(parseWeapon(req));
-                resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-                writer.println("Weapon was updated");
-            } catch (Exception e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                writer.println("Weapon was not updated and that's super sad");
+                writer.println("Your weapon must have been updated");
             }
         }
     }
@@ -62,23 +57,18 @@ public class WeaponServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (var writer = resp.getWriter()) {
-            try {
-                boolean isDeleted = dao.delete(Long.valueOf(req.getParameter("weapon_id")));
-                if (isDeleted) {
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    writer.println("Weapon was deleted");
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    writer.println("Weapon was not deleted. Maybe you got non-existing weapon_id");
-                }
-            } catch (Exception e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                writer.println("Weapon was not deleted. Provide weapon_id, maybe that's the case");
+            String weaponId = req.getParameter("weapon_id");
+            if (weaponId == null) {
+                writer.println("You actually do need to specify id here. Cannot delete without id.");
+                writer.println("Aborting operation...");
+            } else {
+                dao.delete(Long.valueOf(weaponId));
+                writer.println("Your weapon must have been deleted");
             }
         }
     }
 
-    private static Weapon parseWeapon(HttpServletRequest req) {
+    private Weapon parseWeapon(HttpServletRequest req) {
         String idHolder = req.getParameter("weapon_id");
         String damageHolder = req.getParameter("weapon_damage");
 
