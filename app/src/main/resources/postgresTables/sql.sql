@@ -14,7 +14,8 @@ CREATE TABLE gameCharacter (
 
 CREATE TABLE faction (
 	faction_id SERIAL PRIMARY KEY,
-	faction_name varchar(255)
+	faction_name varchar(255),
+	faction_credo varchar(255)
 );
 
 CREATE TABLE character_factions (
