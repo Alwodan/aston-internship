@@ -1,33 +1,68 @@
 package homework.dao;
 
 import homework.models.Faction;
+import lombok.AllArgsConstructor;
+import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 public class FactionDao implements Dao<Faction> {
+    private final SessionFactory sf;
 
     @Override
     public List<Faction> getAll() {
-        return null;
+        List<Faction> result = new ArrayList<>();
+        sf.inTransaction(session -> {
+            result.addAll(session.createSelectionQuery("from Faction", Faction.class)
+                    .getResultList());
+        });
+        return result;
     }
 
     @Override
     public Faction getById(Long id) {
-        return null;
+        Faction result = new Faction();
+        sf.inTransaction(session -> {
+            Faction dbObject = session.get(Faction.class, id);
+            if (dbObject != null) {
+                result.setName(dbObject.getName());
+                result.setCredo(dbObject.getCredo());
+                result.setId(dbObject.getId());
+            }
+        });
+        return result.getId() == null ? null : result;
     }
 
     @Override
     public Faction save(Faction obj) {
-        return null;
+        sf.inTransaction(session -> {
+            session.persist(obj);
+        });
+        return obj;
     }
 
     @Override
-    public void update(Faction obj) {
-
+    public void update(Faction faction) {
+        sf.inTransaction(session -> {
+            Faction dbObject = session.get(Faction.class, faction.getId());
+            if (dbObject != null) {
+                if (faction.getName() != null) {
+                    dbObject.setName(faction.getName());
+                }
+                if (faction.getCredo() != null) {
+                    dbObject.setCredo(faction.getCredo());
+                }
+            }
+        });
     }
 
     @Override
     public void delete(Long id) {
-        return;
+        sf.inTransaction(session -> {
+            Faction dbObject = session.get(Faction.class, id);
+            session.remove(dbObject);
+        });
     }
 }
