@@ -1,6 +1,8 @@
 package homework.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +15,9 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "faction")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Faction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +32,7 @@ public class Faction {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(mappedBy = "factions")
+    @ManyToMany(mappedBy = "factions", fetch = FetchType.EAGER)
     private List<GameCharacter> characters;
 
     public Faction(Long id, String name, String credo) {
