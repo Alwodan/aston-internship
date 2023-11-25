@@ -17,13 +17,17 @@ public class GameCharacter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "character_id")
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "character_weapon_id", nullable = false)
     private Weapon weapon;
+
     @Column(name = "character_name")
     private String name;
+
     @Column(name = "character_powerlevel")
     private Integer powerLevel;
+
     @ManyToMany
     @JoinTable(
             name = "character_factions",

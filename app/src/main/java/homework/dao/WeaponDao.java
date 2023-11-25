@@ -1,14 +1,15 @@
 package homework.dao;
 
 import homework.models.Weapon;
-import homework.utils.HibernateUtil;
+import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 public class WeaponDao implements Dao<Weapon> {
-    SessionFactory sf = HibernateUtil.getSessionFactory();
+    private final SessionFactory sf;
 
     @Override
     public List<Weapon> getAll() {

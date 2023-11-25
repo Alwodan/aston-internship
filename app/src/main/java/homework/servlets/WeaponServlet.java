@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import homework.dao.Dao;
 import homework.dao.WeaponDao;
 import homework.models.Weapon;
+import homework.utils.HibernateUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,7 +15,7 @@ import java.io.IOException;
 
 @WebServlet(name = "weaponServlet", value = "/weapons")
 public class WeaponServlet extends HttpServlet {
-    Dao<Weapon> dao = new WeaponDao();
+    Dao<Weapon> dao = new WeaponDao(HibernateUtil.getSessionFactory());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

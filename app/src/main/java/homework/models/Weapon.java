@@ -20,10 +20,13 @@ public class Weapon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weapon_id")
     private Long id;
+
     @Column(name = "weapon_name")
     private String name;
+
     @Column(name = "weapon_damage")
     private Integer damage;
+
     @OneToMany(mappedBy = "weapon")
     @JsonIgnore
     private List<GameCharacter> characters;
