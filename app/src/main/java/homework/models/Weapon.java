@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,7 +30,7 @@ public class Weapon {
 
     @OneToMany(mappedBy = "weapon")
     @JsonIgnore
-    private List<GameCharacter> characters;
+    private Set<GameCharacter> characters;
 
     public Weapon(String name, Integer damage) {
         this.name = name;
