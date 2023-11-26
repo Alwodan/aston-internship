@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -15,27 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "weapon")
-public class Weapon {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "weapon_id")
-    private Long id;
+public class Weapon extends AbstractNamedEntity {
 
-    @Column(name = "weapon_name")
-    private String name;
-
-    @Column(name = "weapon_damage")
     private Integer damage;
 
     @OneToMany(mappedBy = "weapon")
     @JsonIgnore
     private Set<GameCharacter> characters;
-
-    public Weapon(String name, Integer damage) {
-        this.name = name;
-        this.damage = damage;
-    }
 
     public Weapon(Long id, String name, Integer damage) {
         this.id = id;

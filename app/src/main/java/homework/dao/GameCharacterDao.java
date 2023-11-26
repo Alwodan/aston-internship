@@ -29,7 +29,7 @@ public class GameCharacterDao implements Dao<GameCharacter> {
     public GameCharacter getById(Long id) {
         GameCharacter result = new GameCharacter();
         sf.inTransaction(session -> {
-            EntityGraph entityGraph = session.getEntityGraph("character-entity-graph-with-factions");
+            EntityGraph<?> entityGraph = session.getEntityGraph("character-entity-graph-with-factions");
             Map<String, Object> properties = new HashMap<>();
             properties.put("jakarta.persistence.fetchgraph", entityGraph);
             GameCharacter dbObject = session.find(GameCharacter.class, id, properties);

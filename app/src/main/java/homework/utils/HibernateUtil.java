@@ -1,5 +1,6 @@
 package homework.utils;
 
+import homework.models.AbstractNamedEntity;
 import homework.models.Faction;
 import homework.models.GameCharacter;
 import homework.models.Weapon;
@@ -19,6 +20,7 @@ public class HibernateUtil {
                         .build();
 
                 Metadata metadata = new MetadataSources(serviceRegistry)
+                        .addAnnotatedClass(AbstractNamedEntity.class)
                         .addAnnotatedClass(Weapon.class)
                         .addAnnotatedClass(GameCharacter.class)
                         .addAnnotatedClass(Faction.class)

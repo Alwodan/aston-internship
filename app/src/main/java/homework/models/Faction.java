@@ -16,20 +16,11 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "faction")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class Faction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "faction_id")
-    private Long id;
+public class Faction extends AbstractNamedEntity {
 
-    @Column(name = "faction_name")
-    private String name;
-
-    @Column(name = "faction_credo")
     private String credo;
 
     @ToString.Exclude
@@ -38,7 +29,9 @@ public class Faction {
     private Set<GameCharacter> characters;
 
     public Faction(Long id, String name, String credo) {
-        this(id, name, credo, null);
+        this.id = id;
+        this.name = name;
+        this.credo = credo;
     }
 
     @Override

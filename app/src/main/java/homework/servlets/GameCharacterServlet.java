@@ -95,9 +95,9 @@ public class GameCharacterServlet extends HttpServlet {
 
         Long characterId = idHolder == null ? null : Long.valueOf(idHolder);
         Weapon weapon = weaponIdHolder == null ? null : weaponDao.getById(Long.valueOf(weaponIdHolder));
-        Integer powerlevel = powerHolder == null ? null : Integer.valueOf(powerHolder);
+        Integer powerLevel = powerHolder == null ? null : Integer.valueOf(powerHolder);
 
         String characterName = req.getParameter("character_name");
-        return new GameCharacter(characterId, weapon, characterName, powerlevel, null);
+        return new GameCharacter(characterId,characterName, weapon, powerLevel);
     }
 }

@@ -23,34 +23,26 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "gamecharacter")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class GameCharacter {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "character_id")
-    private Long id;
+public class GameCharacter extends AbstractNamedEntity {
 
     @ManyToOne
-    @JoinColumn(name = "character_weapon_id", nullable = false)
     private Weapon weapon;
 
-    @Column(name = "character_name")
-    private String name;
-
-    @Column(name = "character_powerlevel")
     private Integer powerLevel;
 
     @ManyToMany
-    @JoinTable(
-            name = "character_factions",
-            joinColumns = { @JoinColumn(name = "char_id") },
-            inverseJoinColumns = { @JoinColumn(name = "fac_id")}
-    )
     @ToString.Exclude
     private Set<Faction> factions;
+
+    public GameCharacter(Long id, String name, Weapon weapon, Integer powerLevel) {
+        this.id = id;
+        this.name = name;
+        this.weapon = weapon;
+        this.powerLevel = powerLevel;
+    }
 
     @Override
     public boolean equals(Object o) {
