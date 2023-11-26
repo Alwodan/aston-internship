@@ -28,7 +28,7 @@ public class HibernateUtil {
 
                 sessionFactory = metadata.buildSessionFactory();
             } catch (Exception e) {
-                System.err.println("CRAZY!");
+                System.err.println("Something scary happened when initializing the sessionFactory");
                 e.printStackTrace();
             }
         }
