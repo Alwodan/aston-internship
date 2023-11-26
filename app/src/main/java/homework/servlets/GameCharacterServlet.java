@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @WebServlet(name = "characterServlet", value = "/characters")
 public class GameCharacterServlet extends HttpServlet {
-    Dao<GameCharacter> dao = new GameCharacterDao(HibernateUtil.getSessionFactory());
+    GameCharacterDao dao = new GameCharacterDao(HibernateUtil.getSessionFactory());
     Dao<Weapon> weaponDao = new WeaponDao(HibernateUtil.getSessionFactory());
 
     @Override
@@ -35,15 +35,22 @@ public class GameCharacterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (var writer = resp.getWriter()) {
-            if (req.getParameter("character_id") != null) {
-                writer.println("You actually don't need to specify character id here. For updating use PUT method.");
-                writer.println("Aborting operation...");
-            } else if (req.getParameter("character_weapon_id") == null) {
-                writer.println("For some reason every characters REQUIRES a weapon, so specify id for it");
-                writer.println("Aborting operation...");
+            String characterId = req.getParameter("character_id");
+            String factionId = req.getParameter("faction_id");
+            if (characterId != null && factionId != null) {
+                dao.enterFaction(Long.valueOf(characterId), Long.valueOf(factionId));
+                writer.println("You character must have entered the faction, provided they both exist");
             } else {
-                dao.save(parseCharacter(req));
-                writer.println("Your character must have been saved");
+                if (characterId != null) {
+                    writer.println("You don't need to specify character id here if creating. For updating use PUT method.");
+                    writer.println("Aborting operation...");
+                } else if (req.getParameter("character_weapon_id") == null) {
+                    writer.println("For some reason every characters REQUIRES a weapon, so specify id for it");
+                    writer.println("Aborting operation...");
+                } else {
+                    dao.save(parseCharacter(req));
+                    writer.println("Your character must have been saved");
+                }
             }
         }
     }
@@ -52,7 +59,7 @@ public class GameCharacterServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (var writer = resp.getWriter()) {
             if (req.getParameter("character_id") == null) {
-                writer.println("You actually do need to specify character id here. For creating use POST method.");
+                writer.println("You do need to specify character id here if updating. For creating use POST method.");
                 writer.println("Aborting operation...");
             } else {
                 dao.update(parseCharacter(req));
@@ -65,12 +72,18 @@ public class GameCharacterServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (var writer = resp.getWriter()) {
             String characterId = req.getParameter("character_id");
-            if (characterId == null) {
-                writer.println("You actually do need to specify id here. Cannot delete without id.");
-                writer.println("Aborting operation...");
+            String factionId = req.getParameter("faction_id");
+            if (characterId != null && factionId != null) {
+                dao.leaveFaction(Long.valueOf(characterId), Long.valueOf(factionId));
+                writer.println("Your character must have left the faction, provided they both exist");
             } else {
-                dao.delete(Long.valueOf(characterId));
-                writer.println("Your character must have been deleted");
+                if (characterId == null) {
+                    writer.println("You actually do need to specify id here. Cannot delete without id.");
+                    writer.println("Aborting operation...");
+                } else {
+                    dao.delete(Long.valueOf(characterId));
+                    writer.println("Your character must have been deleted");
+                }
             }
         }
     }

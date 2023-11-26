@@ -71,4 +71,24 @@ public class GameCharacterDao implements Dao<GameCharacter> {
             session.remove(dbObject);
         });
     }
+
+    public void enterFaction(Long characterId, Long factionId) {
+        sf.inTransaction(session -> {
+            GameCharacter characterFromDb = session.get(GameCharacter.class, characterId);
+            Faction factionFromDb = session.get(Faction.class, factionId);
+            if (characterFromDb != null && factionFromDb != null) {
+                characterFromDb.getFactions().add(factionFromDb);
+            }
+        });
+    }
+
+    public void leaveFaction(Long characterId, Long factionId) {
+        sf.inTransaction(session -> {
+            GameCharacter characterFromDb = session.get(GameCharacter.class, characterId);
+            Faction factionFromDb = session.get(Faction.class, factionId);
+            if (characterFromDb != null && factionFromDb != null) {
+                characterFromDb.getFactions().remove(factionFromDb);
+            }
+        });
+    }
 }
