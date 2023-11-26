@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @NamedEntityGraph(
         name = "character-entity-graph-with-factions",
@@ -49,5 +50,17 @@ public class GameCharacter {
             inverseJoinColumns = { @JoinColumn(name = "fac_id")}
     )
     @ToString.Exclude
-    private List<Faction> factions;
+    private Set<Faction> factions;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GameCharacter that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

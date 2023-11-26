@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,9 +35,21 @@ public class Faction {
     @ToString.Exclude
     @JsonIgnore
     @ManyToMany(mappedBy = "factions")
-    private List<GameCharacter> characters;
+    private Set<GameCharacter> characters;
 
     public Faction(Long id, String name, String credo) {
         this(id, name, credo, null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Faction faction)) return false;
+        return Objects.equals(id, faction.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
