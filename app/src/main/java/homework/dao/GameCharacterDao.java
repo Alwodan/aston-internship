@@ -2,11 +2,14 @@ package homework.dao;
 
 import homework.models.Faction;
 import homework.models.GameCharacter;
+import jakarta.persistence.EntityGraph;
 import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 public class GameCharacterDao implements Dao<GameCharacter> {
@@ -16,7 +19,7 @@ public class GameCharacterDao implements Dao<GameCharacter> {
     public List<GameCharacter> getAll() {
         List<GameCharacter> result = new ArrayList<>();
         sf.inTransaction(session -> {
-            result.addAll(session.createSelectionQuery("from GameCharacter", GameCharacter.class)
+            result.addAll(session.createSelectionQuery("select distinct c from GameCharacter c left join fetch c.factions order by c.id", GameCharacter.class)
                     .getResultList());
         });
         return result;
@@ -26,7 +29,10 @@ public class GameCharacterDao implements Dao<GameCharacter> {
     public GameCharacter getById(Long id) {
         GameCharacter result = new GameCharacter();
         sf.inTransaction(session -> {
-            GameCharacter dbObject = session.get(GameCharacter.class, id);
+            EntityGraph entityGraph = session.getEntityGraph("character-entity-graph-with-factions");
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("jakarta.persistence.fetchgraph", entityGraph);
+            GameCharacter dbObject = session.find(GameCharacter.class, id, properties);
             if (dbObject != null) {
                 result.setName(dbObject.getName());
                 result.setWeapon(dbObject.getWeapon());

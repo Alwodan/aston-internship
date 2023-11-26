@@ -32,7 +32,7 @@ public class Faction {
 
     @ToString.Exclude
     @JsonIgnore
-    @ManyToMany(mappedBy = "factions", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "factions")
     private List<GameCharacter> characters;
 
     public Faction(Long id, String name, String credo) {

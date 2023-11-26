@@ -7,6 +7,15 @@ import lombok.*;
 
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "character-entity-graph-with-factions",
+        attributeNodes = {
+                @NamedAttributeNode("weapon"),
+                @NamedAttributeNode("name"),
+                @NamedAttributeNode("powerLevel"),
+                @NamedAttributeNode(value = "factions")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,7 +42,7 @@ public class GameCharacter {
     @Column(name = "character_powerlevel")
     private Integer powerLevel;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "character_factions",
             joinColumns = { @JoinColumn(name = "char_id") },
