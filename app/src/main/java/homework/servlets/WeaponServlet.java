@@ -2,20 +2,35 @@ package homework.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import homework.dao.Dao;
+import homework.dao.GameCharacterDao;
 import homework.dao.WeaponDao;
 import homework.models.Weapon;
 import homework.utils.HibernateUtil;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @WebServlet(name = "weaponServlet", value = "/weapons")
+@Service
 public class WeaponServlet extends HttpServlet {
-    Dao<Weapon> dao = new WeaponDao(HibernateUtil.getSessionFactory());
+
+    Dao<Weapon> dao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        ApplicationContext ac = (ApplicationContext) config.getServletContext().getAttribute("applicationContext");
+        this.dao = (WeaponDao) ac.getBean("weaponDao");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,8 +51,8 @@ public class WeaponServlet extends HttpServlet {
                 writer.println("You actually don't need to specify id here. For updating use PUT method.");
                 writer.println("Aborting operation...");
             } else {
-                dao.save(parseWeapon(req));
-                writer.println("Your weapon must have been saved");
+                Weapon weapon = dao.save(parseWeapon(req));
+                writer.println("Your weapon must have been saved with id " + weapon.getId());
             }
         }
     }

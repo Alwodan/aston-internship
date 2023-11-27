@@ -2,23 +2,38 @@ package homework.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import homework.dao.Dao;
+import homework.dao.FactionDao;
 import homework.dao.GameCharacterDao;
 import homework.dao.WeaponDao;
 import homework.models.GameCharacter;
 import homework.models.Weapon;
 import homework.utils.HibernateUtil;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @WebServlet(name = "characterServlet", value = "/characters")
+@Component
 public class GameCharacterServlet extends HttpServlet {
-    GameCharacterDao dao = new GameCharacterDao(HibernateUtil.getSessionFactory());
-    Dao<Weapon> weaponDao = new WeaponDao(HibernateUtil.getSessionFactory());
+    GameCharacterDao dao;
+    Dao<Weapon> weaponDao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        ApplicationContext ac = (ApplicationContext) config.getServletContext().getAttribute("applicationContext");
+        this.dao = (GameCharacterDao) ac.getBean("gameCharacterDao");
+        this.weaponDao = (WeaponDao) ac.getBean("weaponDao");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,8 +63,8 @@ public class GameCharacterServlet extends HttpServlet {
                     writer.println("For some reason every characters REQUIRES a weapon, so specify id for it");
                     writer.println("Aborting operation...");
                 } else {
-                    dao.save(parseCharacter(req));
-                    writer.println("Your character must have been saved");
+                    GameCharacter character = dao.save(parseCharacter(req));
+                    writer.println("Your character must have been saved with id " + character.getId());
                 }
             }
         }

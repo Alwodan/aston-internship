@@ -5,6 +5,8 @@ import homework.models.GameCharacter;
 import jakarta.persistence.EntityGraph;
 import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
+@Component("gameCharacterDao")
 public class GameCharacterDao implements Dao<GameCharacter> {
+    @Autowired
     private final SessionFactory sf;
 
     @Override

@@ -3,12 +3,16 @@ package homework.dao;
 import homework.models.Weapon;
 import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
+@Component("weaponDao")
 public class WeaponDao implements Dao<Weapon> {
+    @Autowired
     private final SessionFactory sf;
 
     @Override

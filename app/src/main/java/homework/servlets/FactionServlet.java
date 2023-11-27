@@ -5,17 +5,30 @@ import homework.dao.Dao;
 import homework.dao.FactionDao;
 import homework.models.Faction;
 import homework.utils.HibernateUtil;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @WebServlet(name = "factionServlet", value = "/factions")
+@Component
 public class FactionServlet extends HttpServlet {
-    Dao<Faction> dao = new FactionDao(HibernateUtil.getSessionFactory());
+    Dao<Faction> dao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        ApplicationContext ac = (ApplicationContext) config.getServletContext().getAttribute("applicationContext");
+        this.dao = (FactionDao) ac.getBean("factionDao");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,8 +49,8 @@ public class FactionServlet extends HttpServlet {
                 writer.println("You actually don't need to specify id here. For updating use PUT method.");
                 writer.println("Aborting operation...");
             } else {
-                dao.save(parseFaction(req));
-                writer.println("Your faction must have been saved");
+                Faction faction = dao.save(parseFaction(req));
+                writer.println("Your faction must have been saved with id " + faction.getId());
             }
         }
     }
